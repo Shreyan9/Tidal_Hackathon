@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import './VoiceRecorder.css'; // Import the matching CSS
+import './VoiceRecorder.css';
 
 const VoiceRecorder = ({ onAnalysisComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -13,9 +13,6 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
   const timerRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // ─────────────────────────────────────────────────────────────
-  // 1. START RECORDING
-  // ─────────────────────────────────────────────────────────────
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -37,39 +34,25 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
-
-      // Start timer
       setRecordingTime(0);
       timerRef.current = setInterval(() => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
-
     } catch (error) {
       console.error('Error accessing microphone:', error);
       alert('Could not access microphone. Please check your permissions.');
     }
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // 2. STOP RECORDING
-  // ─────────────────────────────────────────────────────────────
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
-
-      // Stop all audio tracks
       mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
-
       setIsRecording(false);
-
-      // Clear timer
       clearInterval(timerRef.current);
     }
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // 3. HANDLE FILE UPLOAD
-  // ─────────────────────────────────────────────────────────────
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -79,59 +62,42 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
     }
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // 4. ANALYZE AUDIO
-  // ─────────────────────────────────────────────────────────────
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!audioURL) return;
-
     setIsAnalyzing(true);
 
-    // Simulate analysis with a timeout
-    setTimeout(() => {
-      // Mock analysis result
-      const mockAnalysis = {
-        id: Date.now().toString(),
-        fileName: fileName,
-        timestamp: new Date().toISOString(),
-        threatLevel: Math.random() > 0.5 ? 'High' : 'Low',
-        scamProbability: Math.floor(Math.random() * 100),
-        transcript: "Hello, this is your bank calling about suspicious activity...",
-        indicators: [
-          'Urgency tactics',
-          'Requesting personal information',
-          'Impersonating a financial institution'
-        ],
-        audioURL: audioURL
-      };
+    try {
+      const audioBlob = await fetch(audioURL).then(r => r.blob());
+      const formData = new FormData();
+      formData.append('audio', audioBlob, fileName);
 
-      // Pass the result back up
-      if (onAnalysisComplete) {
-        onAnalysisComplete(mockAnalysis);
-      }
+      const response = await fetch('http://localhost:5000/analyze', {
+        method: 'POST',
+        body: formData
+      });
 
-      setIsAnalyzing(false);
-    }, 2000);
+      const result = await response.json();
+      result.audioUrl = audioURL;
+
+      if (onAnalysisComplete) onAnalysisComplete(result);
+    } catch (err) {
+      console.error("Error analyzing audio:", err);
+      alert("Analysis failed. Please try again.");
+    }
+
+    setIsAnalyzing(false);
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // 5. FORMAT RECORDING TIME
-  // ─────────────────────────────────────────────────────────────
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // 6. RENDER
-  // ─────────────────────────────────────────────────────────────
   return (
     <div className="voice-recorder">
-      {/* 6A. DEFAULT: SHOW BOTH UPLOAD + RECORD BUTTONS */}
       {!audioURL && !isRecording && (
         <div className="recorder-actions">
-          {/* Hidden file input for 'Upload Audio' */}
           <input
             type="file"
             accept="audio/*"
@@ -158,7 +124,6 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
         </div>
       )}
 
-      {/* 6B. IF RECORDING, SHOW 'STOP' BUTTON */}
       {isRecording && (
         <div className="recording-container">
           <button className="action-button recording" onClick={stopRecording}>
@@ -168,7 +133,6 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
         </div>
       )}
 
-      {/* 6C. IF AUDIO IS SET, SHOW PREVIEW & ANALYSIS */}
       {audioURL && (
         <div className="audio-preview">
           <p>{fileName}</p>
