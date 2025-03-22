@@ -20,10 +20,10 @@ indicators = []
 if matches:
     indicators.append("Detected suspicious keywords: " + ', '.join(matches))
     threat_level = "High"
-    scam_score = 100 - (len(matches) * 8)  # crude rule-based score
+    scam_score = 36 + (len(matches) * 8)  # crude rule-based score
 else:
     threat_level = "Low"
-    scam_score = 90
+    scam_score = 10
 
 scam_score = max(0, min(100, scam_score))
 
