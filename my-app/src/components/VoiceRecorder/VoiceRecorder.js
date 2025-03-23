@@ -64,12 +64,13 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
 
   const handleAnalyze = async () => {
     if (!audioURL) return;
+
     setIsAnalyzing(true);
 
     try {
       const audioBlob = await fetch(audioURL).then(r => r.blob());
       const formData = new FormData();
-      formData.append('audio', audioBlob, fileName);
+      formData.append('file', audioBlob, fileName); // Field name must be "file"
 
       const response = await fetch('http://localhost:5000/analyze', {
         method: 'POST',
@@ -80,9 +81,9 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
       result.audioUrl = audioURL;
 
       if (onAnalysisComplete) onAnalysisComplete(result);
-    } catch (err) {
-      console.error("Error analyzing audio:", err);
-      alert("Analysis failed. Please try again.");
+    } catch (error) {
+      console.error('Error analyzing audio:', error);
+      alert('Failed to analyze audio. Please try again.');
     }
 
     setIsAnalyzing(false);
