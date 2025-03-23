@@ -3,7 +3,6 @@ import './App.css';
 import ScamReport from './components/ScamAnalysis/ScamReport';
 import VoiceRecorder from './components/VoiceRecorder/VoiceRecorder';
 import UploadHistory from './components/History/UploadHistory';
-import ScamEducation from './components/Education/ScamEducation';
 import ChatWidget from './components/chatwidget'; 
 import LoginButton from './components/Auth/LoginButton';
 import LogoutButton from './components/Auth/LogoutButton';

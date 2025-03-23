@@ -111,7 +111,7 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
             className="action-button upload-button"
             onClick={() => fileInputRef.current.click()}
           >
-            <span className="button-icon">📁</span>
+            <span className="button-icon" role="img" and aria-label="upload">📁</span>
             Upload Audio
           </button>
 
@@ -119,7 +119,7 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
             className="action-button record-button"
             onClick={startRecording}
           >
-            <span className="button-icon">🎙️</span>
+            <span className="button-icon" role="img" and aria-label="Microphone" >🎙️</span>
             Record Audio
           </button>
         </div>
