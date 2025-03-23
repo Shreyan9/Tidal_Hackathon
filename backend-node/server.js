@@ -61,7 +61,8 @@ app.post('/chat', async (req, res) => {
 
         console.log("✅ Gemini AI Response:", responseText);
 
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", "https://brilliant-toffee-2f8b07.netlify.app/");
+        res.setHeader("Access-Control-Allow-Credentials", 'true');
         res.json({ response: responseText });
 
     } catch (error) {
