@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5001;
 
 // ✅ Enable CORS so frontend can connect
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
     credentials: true
@@ -47,12 +47,21 @@ app.post('/chat', async (req, res) => {
             generationConfig: { max_output_tokens: 150 }
         });
 
-        const responseText = result.response?.candidates?.[0]?.content?.parts?.[0]?.text
-            || "Sorry, I couldn't generate a response.";
+        let responseText = "Sorry, I couldn't generate a response.";
+        if (result && result.response &&
+            Array.isArray(result.response.candidates) &&
+            result.response.candidates[0] &&
+            result.response.candidates[0].content &&
+            Array.isArray(result.response.candidates[0].content.parts) &&
+            result.response.candidates[0].content.parts[0] &&
+            result.response.candidates[0].content.parts[0].text) {
+
+            responseText = result.response.candidates[0].content.parts[0].text;
+        }
 
         console.log("✅ Gemini AI Response:", responseText);
 
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ response: responseText });
 
     } catch (error) {
