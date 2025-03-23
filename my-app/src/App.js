@@ -4,6 +4,10 @@ import ScamReport from './components/ScamAnalysis/ScamReport';
 import VoiceRecorder from './components/VoiceRecorder/VoiceRecorder';
 import UploadHistory from './components/History/UploadHistory';
 import ScamEducation from './components/Education/ScamEducation';
+import ChatWidget from './components/chatwidget'; 
+import LoginButton from './components/Auth/LoginButton';
+import LogoutButton from './components/Auth/LogoutButton';
+import Profile from './components/Auth/profile';
 import ChatWidget from './components/chatwidget'; // ✅ Import Chatbot
 
 
@@ -50,6 +54,15 @@ function App() {
   }
 
   return (
+    <div className="App">
+        <div className="auth-buttons">
+        <LoginButton />
+        <LogoutButton />
+        <Profile />
+        </div>
+
+
+    
     <div className="App">
       <div className="floating-shapes">
         <div className="shape"></div>
@@ -179,6 +192,41 @@ function App() {
         </section>
 
 
+        </section>
+
+
+        <section id="contact" className="contact-section">
+          <h2>Contact Us</h2>
+          <p>Have questions, suggestions, or feedback? We’d love to hear from you.</p>
+          
+          <form 
+            action="https://formspree.io/f/xnnpdvrj" 
+            method="POST"
+            className="contact-form"
+          >
+            <input 
+              type="text" 
+              name="name" 
+              placeholder="Your Name" 
+              required 
+            />
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="Your Email" 
+              required 
+            />
+            <textarea 
+              name="message" 
+              placeholder="Your Message" 
+              rows="5" 
+              required 
+            ></textarea>
+            <button type="submit" className="cta-button">Send Message</button>
+          </form>
+        </section>
+
+
       </main>
 
       <footer style={{ textAlign: 'center', padding: '20px 0', color: 'var(--gray)' }}>
@@ -190,6 +238,9 @@ function App() {
 
       {/* ✅ Add Chat Widget Here */}
       <ChatWidget />
+
+
+    </div>
 
     </div>
   );
