@@ -3,7 +3,6 @@ import './App.css';
 import ScamReport from './components/ScamAnalysis/ScamReport';
 import VoiceRecorder from './components/VoiceRecorder/VoiceRecorder';
 import UploadHistory from './components/History/UploadHistory';
-import ScamEducation from './components/Education/ScamEducation';
 
 function App() {
   const [currentAnalysis, setCurrentAnalysis] = useState(null);
@@ -20,10 +19,24 @@ function App() {
   }, []);
   
   const handleNewAnalysis = (analysis) => {
-    setCurrentAnalysis(analysis);
-    // Add to history
-    setUploadHistory(prev => [analysis, ...prev.slice(0, 4)]);
+    const newAnalysis = {
+      ...analysis,
+      id: Date.now(), // for unique tracking
+      fileName: analysis.fileName || `Recording_${new Date().toISOString().slice(0, 10)}.wav`,
+      timestamp: new Date().toISOString()
+    };
+    
+    setCurrentAnalysis(newAnalysis);
+    setUploadHistory(prev => [newAnalysis, ...prev.slice(0, 4)]);
   };
+  const handleDeleteAnalysis = (id) => {
+    setUploadHistory(prev => prev.filter(item => item.id !== id));
+    // Optional: clear currentAnalysis if it's the one deleted
+    if (currentAnalysis && currentAnalysis.id === id) {
+      setCurrentAnalysis(null);
+    }
+  };
+  
 
   if (isLoading) {
     return (
@@ -43,7 +56,7 @@ function App() {
       </div>
       
       <header className="App-header">
-        <h1>Post-Call Scam Forensics</h1>
+        <h1>VoiceLock AI</h1>
         <p>Protect yourself from scam calls with AI-powered analysis and verification</p>
       </header>
       
@@ -94,34 +107,67 @@ function App() {
           </div>
         </section>
         
-        <div className="app-features">
-          <div className="history-section">
-            <UploadHistory 
-              history={uploadHistory} 
-              onSelectItem={setCurrentAnalysis} 
-            />
-          </div>
-          
-          <div className="education-section">
-            <ScamEducation />
-          </div>
+        <div className="centered-history-wrapper">
+          <UploadHistory 
+            history={uploadHistory} 
+            onSelectItem={setCurrentAnalysis} 
+            onDeleteItem={handleDeleteAnalysis}
+          />
         </div>
+
         
         <section className="cta-section" style={{ textAlign: 'center', marginTop: '40px' }}>
           <h2>Stay Protected from Scams</h2>
           <p>Our tool helps you identify and avoid potential scams before they can cause harm.</p>
-          <button className="cta-button">
+          <a 
+            className="cta-button" 
+            href="https://www.fcc.gov/consumers/guides/stop-unwanted-robocalls-and-texts" 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
             Learn More About Scam Prevention
-          </button>
+          </a>
         </section>
+
+
+        <section id="contact" className="contact-section">
+          <h2>Contact Us</h2>
+          <p>Have questions, suggestions, or feedback? We’d love to hear from you.</p>
+          
+          <form 
+            action="https://formspree.io/f/xnnpdvrj" 
+            method="POST"
+            className="contact-form"
+          >
+            <input 
+              type="text" 
+              name="name" 
+              placeholder="Your Name" 
+              required 
+            />
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="Your Email" 
+              required 
+            />
+            <textarea 
+              name="message" 
+              placeholder="Your Message" 
+              rows="5" 
+              required 
+            ></textarea>
+            <button type="submit" className="cta-button">Send Message</button>
+          </form>
+        </section>
+
+
       </main>
       
       <footer style={{ textAlign: 'center', padding: '20px 0', color: 'var(--gray)' }}>
-        <p>© 2023 Post-Call Scam Forensics | Protecting users from scams one call at a time</p>
+        <p>© 2025 VoiceLock AI | Protecting users from scams one call at a time</p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '10px' }}>
-          <a href="#" style={{ color: 'var(--primary)' }}>Privacy Policy</a>
-          <a href="#" style={{ color: 'var(--primary)' }}>Terms of Service</a>
-          <a href="#" style={{ color: 'var(--primary)' }}>Contact Us</a>
+          
         </div>
       </footer>
     </div>
