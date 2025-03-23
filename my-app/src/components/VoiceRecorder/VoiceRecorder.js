@@ -72,7 +72,7 @@ const VoiceRecorder = ({ onAnalysisComplete }) => {
       const formData = new FormData();
       formData.append('file', audioBlob, fileName); // Field name must be "file"
 
-      const response = await fetch('http://localhost:5000/analyze', {
+      const response = await fetch('https://backend-4wng.onrender.com', {
         method: 'POST',
         body: formData
       });
