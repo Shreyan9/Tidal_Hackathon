@@ -30,7 +30,7 @@ const ChatWidget = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('https://backend-4wng.onrender.com/', {
+            const response = await fetch('https://backend-4wng.onrender.com/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
