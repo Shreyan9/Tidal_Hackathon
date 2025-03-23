@@ -8,7 +8,6 @@ import ChatWidget from './components/chatwidget';
 import LoginButton from './components/Auth/LoginButton';
 import LogoutButton from './components/Auth/LogoutButton';
 import Profile from './components/Auth/profile';
-import ChatWidget from './components/chatwidget'; // ✅ Import Chatbot
 
 
 function App() {
@@ -133,7 +132,7 @@ function App() {
 
         
 
-        <div className="app-features">
+        {/* <div className="app-features">
           <div className="history-section">
             <UploadHistory 
               history={uploadHistory} 
@@ -144,7 +143,7 @@ function App() {
           <div className="education-section">
             <ScamEducation />
           </div>
-        </div>
+        </div> */}
 
         <section className="cta-section" style={{ textAlign: 'center', marginTop: '40px' }}>
           <h2>Stay Protected from Scams</h2>
@@ -160,7 +159,7 @@ function App() {
         </section>
 
 
-        <section id="contact" className="contact-section">
+        {/* <section id="contact" className="contact-section">
           <h2>Contact Us</h2>
           <p>Have questions, suggestions, or feedback? We’d love to hear from you.</p>
           
@@ -189,10 +188,10 @@ function App() {
             ></textarea>
             <button type="submit" className="cta-button">Send Message</button>
           </form>
-        </section>
+        </section> */}
 
 
-        </section>
+        
 
 
         <section id="contact" className="contact-section">
