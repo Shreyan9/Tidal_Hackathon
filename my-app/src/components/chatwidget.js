@@ -8,9 +8,14 @@ const ChatWidget = () => {
     ]);
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const messagesEndRef = useRef(null); // ✅ Reference for auto-scroll
+    const messagesEndRef = useRef(null);
 
-    // ✅ Auto-scroll to latest message
+    // Auto-scroll to the latest message
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
@@ -45,9 +50,7 @@ const ChatWidget = () => {
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
+        if (e.key === 'Enter') sendMessage();
     };
 
     return (
@@ -60,6 +63,7 @@ const ChatWidget = () => {
                         <h3>Cybersecurity Assistant</h3>
                         <button className="close-chat" onClick={toggleChat}>×</button>
                     </div>
+
                     <div className="chat-messages">
                         {messages.map((message, index) => (
                             <div key={index} className={`message ${message.isUser ? 'user-message' : 'bot-message'}`}>
@@ -67,14 +71,15 @@ const ChatWidget = () => {
                             </div>
                         ))}
                         {isLoading && <div className="loading">Thinking...</div>}
-                        <div ref={messagesEndRef} /> {/* ✅ Auto-scroll target */}
+                        <div ref={messagesEndRef} /> {/* Auto-scroll target */}
                     </div>
+
                     <div className="chat-input">
                         <input
                             type="text"
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
-                            onKeyPress={handleKeyPress}
+                            onKeyDown={handleKeyPress} // Updated to `onKeyDown` for better support
                             placeholder="Type your question here..."
                         />
                         <button className="send-button" onClick={sendMessage}>Send</button>
