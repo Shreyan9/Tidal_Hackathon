@@ -63,6 +63,8 @@ app.post('/chat', async (req, res) => {
 
         res.setHeader("Access-Control-Allow-Origin", "https://brilliant-toffee-2f8b07.netlify.app");
         res.setHeader("Access-Control-Allow-Credentials", 'true');
+        res.setHeader("Access-Control-Allow-Methods", 'GET, POST, OPTIONS');
+        res.setHeader("Access-Control-Allow-Headers", 'Content-Type, Authorization');
         res.json({ response: responseText });
 
     } catch (error) {
